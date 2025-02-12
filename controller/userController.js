@@ -71,3 +71,15 @@ export const singleUser = async (req, res) => {
 
   return res.json({ status: 200, data: user, message: "Fetched single user" });
 };
+
+//delete user
+export const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  await prisma.user.delete({
+    where: {
+      id: Number(userId),
+    },
+  });
+
+  return res.json({ status: 201, message: "User deleted successfully" });
+};
