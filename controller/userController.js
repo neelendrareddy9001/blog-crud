@@ -50,7 +50,26 @@ export const updateUser = async (req, res) => {
 
 //fetch users
 export const fetchUsers = async (req, res) => {
-  const users = await prisma.user.findMany({});
+  const users = await prisma.user.findMany({
+    //get users with post and comment
+    // include: {
+    //   post: {
+    //     select: {
+    //       title: true,
+    //       comment_count: true,
+    //     },
+    //   },
+    // },
+    //get how many count of post and comment
+    // select: {
+    //   _count: {
+    //     select: {
+    //       post: true,
+    //       comment: true,
+    //     },
+    //   },
+    // },
+  });
 
   return res.json({
     status: 201,

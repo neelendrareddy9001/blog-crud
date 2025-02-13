@@ -20,21 +20,20 @@ export const createPost = async (req, res) => {
 
 //update
 export const updatePost = async (req, res) => {
-  const userId = req.params.id;
-  const { name, email, password } = req.body;
+  const postId = req.params.id;
+  const { post_id, title, description } = req.body;
 
-  await prisma.user.update({
+  await prisma.post.update({
     where: {
-      id: Number(userId),
+      id: Number(postId),
     },
     data: {
-      name,
-      email,
-      password,
+      title,
+      description,
     },
   });
 
-  return res.json({ status: 200, message: "User updated successfully" });
+  return res.json({ status: 200, message: "Post updated successfully" });
 };
 
 //fetch users
@@ -48,27 +47,27 @@ export const fetchPosts = async (req, res) => {
   });
 };
 
-//get single user by id
+//get single post by id
 export const singlePost = async (req, res) => {
-  const userId = req.params.id;
+  const postId = req.params.id;
 
-  const user = await prisma.user.findFirst({
+  const post = await prisma.post.findFirst({
     where: {
-      id: Number(userId),
+      id: Number(postId),
     },
   });
 
-  return res.json({ status: 200, data: user, message: "Fetched single user" });
+  return res.json({ status: 200, data: post, message: "Fetched single post" });
 };
 
-//delete user
+//delete post
 export const deletePost = async (req, res) => {
-  const userId = req.params.id;
-  await prisma.user.delete({
+  const postId = req.params.id;
+  await prisma.post.delete({
     where: {
-      id: Number(userId),
+      id: Number(postId),
     },
   });
 
-  return res.json({ status: 201, message: "User deleted successfully" });
+  return res.json({ status: 201, message: "post deleted successfully" });
 };
