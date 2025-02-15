@@ -61,14 +61,14 @@ export const fetchUsers = async (req, res) => {
     //   },
     // },
     //get how many count of post and comment
-    // select: {
-    //   _count: {
-    //     select: {
-    //       post: true,
-    //       comment: true,
-    //     },
-    //   },
-    // },
+    select: {
+      _count: {
+        select: {
+          post: true,
+          comment: true,
+        },
+      },
+    },
   });
 
   return res.json({

@@ -5,7 +5,7 @@ import {
   fetchComments,
   singleComm,
   updateComm,
-} from "../controller/postController.js";
+} from "../controller/comController.js";
 
 const router = Router();
 

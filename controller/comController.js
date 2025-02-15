@@ -2,35 +2,47 @@ import prisma from "../Db/db.config.js";
 
 //create comment
 export const createComm = async (req, res) => {
-  const { user_id, title, description } = req.body;
+  const { user_id, post_id, comment } = req.body;
 
-  const newPost = await prisma.comment.create({
+  //increase comment by adding multiple comment
+  await prisma.post.update({
+    where: {
+      id: Number(post_id),
+    },
+    data: {
+      comment_count: {
+        increment: 1,
+      },
+    },
+  });
+
+  const newComment = await prisma.comment.create({
     data: {
       user_id: Number(user_id),
-      title,
-      description,
+      post_id: Number(post_id),
+      comment,
     },
   });
 
   return res.json({
     status: 200,
-    message: "Post created sussessfully",
-    data: newPost,
+    message: "Comment created sussessfully",
+    data: newComment,
   });
 };
 
 //update comment
 export const updateComm = async (req, res) => {
   const postId = req.params.id;
-  const { post_id, title, description } = req.body;
+  const { post_id, user_id, comment } = req.body;
 
   await prisma.comment.update({
     where: {
+      user_id: Number(user_id),
       id: Number(postId),
     },
     data: {
-      title,
-      description,
+      comment,
     },
   });
 
@@ -39,36 +51,53 @@ export const updateComm = async (req, res) => {
 
 //fetch comments
 export const fetchComments = async (req, res) => {
-  const posts = await prisma.comment.findMany({});
+  const comments = await prisma.comment.findMany({});
 
   return res.json({
     status: 201,
-    message: "fetched posts successfully",
-    data: posts,
+    message: "fetched comments successfully",
+    data: comments,
   });
 };
 
 //get single comm by id
 export const singleComm = async (req, res) => {
-  const postId = req.params.id;
+  const commentId = req.params.id;
 
-  const post = await prisma.comment.findFirst({
+  const comment = await prisma.comment.findFirst({
     where: {
-      id: Number(postId),
+      id: Number(commentId),
     },
   });
 
-  return res.json({ status: 200, data: post, message: "Fetched single post" });
+  return res.json({
+    status: 200,
+    data: comment,
+    message: "Fetched single comment",
+  });
 };
 
 //delete comm
 export const deleteComm = async (req, res) => {
-  const postId = req.params.id;
-  await prisma.comment.delete({
+  const commentId = req.params.id;
+
+  //decrease comment by deleting a comment as total coomment count
+  await prisma.post.update({
     where: {
-      id: Number(postId),
+      id: Number(post_id),
+    },
+    data: {
+      comment_count: {
+        decrement: 1,
+      },
     },
   });
 
-  return res.json({ status: 201, message: "post deleted successfully" });
+  await prisma.comment.delete({
+    where: {
+      id: Number(commentId),
+    },
+  });
+
+  return res.json({ status: 201, message: "Comment deleted successfully" });
 };
